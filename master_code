@@ -1,0 +1,20 @@
+// MASTER CODE 
+#include <wire.h> //include wire library
+void setup() {
+  // put your setup code here, to run once:
+ Serial.begin(9600); //begin serial monitor @ 9600 baud
+ Wire.begin(D1,D2); //D1, D2 = digital 1 and 2 pins on nodemcu = SDA + SCL
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+ Wire.beginTransmission(8); // setup connection with device address 8, the arduino
+ Wire.write("Hello from NodeMCU"); // write message to slave device
+ Wire.endTransmission(); // cuts off connection 
+ Wire.requestFrom(8, 36); //requests to read data from device address 8, size of 36 bytes
+ While(Wire.available()){
+ char c = Wire.read(); //stores value of transmission from slave in char c
+ Serial.print(c); //prints transmitted message
+ }
+ Serial.println();
+ delay(1000);
+}
