@@ -1,0 +1,37 @@
+// SLAVE CODE //
+
+#include <wire.h>  //imports wire library
+
+const int redLed = 8;
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(redLed, OUTPUT);
+  Wire.begin(8); //enters server with device address 8; this address is noticed by the master
+  Wire.onReceive(recEvent); //calls receive function upon receiving a transmission from master
+  Wire.onRequest(reqEvent); //calls request function upon requesting a data exchange with master
+  Serial.begin(9600); //begins serial monitor @9600 baud
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  delay(100); // so we don't overload the system with incessant requests
+}
+//RECEIVE EVENT FUNCTION; WHAT DO I DO WHEN I GET A THING OF DATA FROM MASTER?
+void recEvent(int howMany) {
+  while (0 < Wire.available()) { //Wire.available() returns number of bytes able to be received from master
+    char c = Wire.read(); //reads incoming data from master and stores in c
+    Serial.print(c); //prints out c
+  }
+if (Wire.read()){ //if incoming message from nodemcu is detected
+  digitalWrite(redLed, HIGH);// turn on LED
+  delay(1000); //delay of 1 second
+  digitalWrite(redLed, LOW); //turn off LED
+  }
+  
+Serial.println();
+}
+
+//REQUEST EVENT FUNCTION; WHAT DO I WANT TO SEND MASTER?
+void reqEvent() {
+  Wire.write("Hello NodeMCU from Arduino");
+}
